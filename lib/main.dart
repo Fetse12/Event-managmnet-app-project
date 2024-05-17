@@ -1,4 +1,5 @@
 import 'package:application_project/Signup.dart';
+import 'package:application_project/checksession.dart';
 import 'package:application_project/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +22,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: index_page());
+        home: check_session());
   }
 }

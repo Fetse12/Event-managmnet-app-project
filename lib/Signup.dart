@@ -95,6 +95,7 @@ class _Signup_pageState extends State<Signup_page> {
                                     SnackBar(
                                         content: Text(
                                             "Account Created succesfully")));
+                                Future.delayed(Duration(seconds: 2));
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
