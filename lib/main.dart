@@ -1,8 +1,8 @@
 import 'package:application_project/Signup.dart';
 import 'package:application_project/login.dart';
-import 'package:application_project/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:application_project/index.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Demo', home: const Signup_page());
+    return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          textTheme:
+              GoogleFonts.josefinSansTextTheme(Theme.of(context).textTheme),
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: index_page());
   }
 }

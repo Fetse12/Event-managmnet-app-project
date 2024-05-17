@@ -1,4 +1,5 @@
 import 'package:application_project/constant/colors.dart';
+import 'package:application_project/login.dart';
 import 'package:flutter/material.dart';
 
 class Home_page extends StatefulWidget {
@@ -17,7 +18,10 @@ class _Home_pageState extends State<Home_page> {
         foregroundColor: Colors.transparent,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => login_page()));
+            },
             icon: Icon(
               Icons.logout,
               color: Colors.black,

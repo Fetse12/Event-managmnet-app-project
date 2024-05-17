@@ -11,9 +11,36 @@ Account account = Account(client);
 Future<String> createUser(String name, String email, String password) async {
   try {
     final user = await account.create(
-        userId: ID.unique(), email: email, password: password);
+        userId: ID.unique(), email: email, password: password, name: name);
     return "Success";
   } on AppwriteException catch (e) {
     return e.message.toString();
+  }
+}
+// login User
+
+Future LoginUser(String email, String password) async {
+  try {
+    final user = await account.createEmailPasswordSession(
+        email: email, password: password);
+    return true;
+  } on AppwriteException catch (e) {
+    return false;
+  }
+}
+
+//logout user
+
+Future LogoutUser() async {
+  await account.deleteSession(sessionId: 'current');
+}
+//check a user active session
+
+Future checkSession() async {
+  try {
+    await account.getSession(sessionId: 'current');
+    return true;
+  } catch (e) {
+    return false;
   }
 }
