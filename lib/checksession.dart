@@ -16,10 +16,10 @@ class _check_sessionState extends State<check_session> {
   void initState() {
     checkSession().then((value) {
       if (value) {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home_page()));
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => index_page()));
       }
     });

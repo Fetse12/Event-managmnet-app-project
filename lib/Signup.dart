@@ -128,10 +128,7 @@ class _Signup_pageState extends State<Signup_page> {
                       height: 8,
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => login_page())),
+                      onTap: () => Navigator.pop(context),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

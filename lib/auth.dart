@@ -1,3 +1,5 @@
+import 'package:application_project/database.dart';
+import 'package:application_project/saved_data.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 
@@ -12,6 +14,7 @@ Future<String> createUser(String name, String email, String password) async {
   try {
     final user = await account.create(
         userId: ID.unique(), email: email, password: password, name: name);
+    saveusersData(name, email, user.$id);
     return "Success";
   } on AppwriteException catch (e) {
     return e.message.toString();
@@ -23,6 +26,7 @@ Future LoginUser(String email, String password) async {
   try {
     final user = await account.createEmailPasswordSession(
         email: email, password: password);
+    SavedData.savedUserId(user.userId);
     return true;
   } on AppwriteException catch (e) {
     return false;
