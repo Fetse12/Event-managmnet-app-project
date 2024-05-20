@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:application_project/constant/custome_input.dart';
 import 'package:application_project/containers/custome_input_form.dart';
+import 'package:appwrite/appwrite.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class creatEvent_page extends StatefulWidget {
   const creatEvent_page({super.key});
@@ -11,6 +16,8 @@ class creatEvent_page extends StatefulWidget {
 }
 
 class _creatEvent_pageState extends State<creatEvent_page> {
+  FilePickerResult? _filePickerResult;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
@@ -44,6 +51,26 @@ class _creatEvent_pageState extends State<creatEvent_page> {
     }
   }
 
+  void _openFilePicker() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+    setState(() {
+      _filePickerResult = result;
+    });
+  }
+
+// upload event image to storage bucket
+Future uploadEventImage()async{
+  try{
+    if (_filePickerResult!=null){
+      PlatformFile file=_filePickerResult.files.first;
+      final fileByes=await File(file.path!).readAsBytes();
+      final InputFile=InputFile.fromBytes(bytes: fileBytes, filename: file.name);
+      final
+    }
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,29 +88,42 @@ class _creatEvent_pageState extends State<creatEvent_page> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .3,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_a_photo_outlined,
-                      size: 42,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      "Add Event",
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w600),
-                    )
-                  ],
+              GestureDetector(
+                onTap: () => _openFilePicker(),
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * .3,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: _filePickerResult != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image(
+                            image: FileImage(
+                                File(_filePickerResult!.files.first.path!)),
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_a_photo_outlined,
+                              size: 42,
+                              color: Colors.black,
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              "Add Event",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
                 ),
               ),
               SizedBox(
@@ -98,6 +138,7 @@ class _creatEvent_pageState extends State<creatEvent_page> {
                 height: 8,
               ),
               CustomInputForm(
+                  maxLines: 4,
                   controller: _descController,
                   icon: Icons.description_outlined,
                   label: "Description",
@@ -138,8 +179,22 @@ class _creatEvent_pageState extends State<creatEvent_page> {
                   label: "Sponsers",
                   hint: "Enter the sponsers of Event"),
               SizedBox(
-                height: 8,
+                height: 40,
               ),
+              SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: MaterialButton(
+                    color: Colors.white,
+                    onPressed: () {},
+                    child: Text(
+                      "Create New Event",
+                      style: TextStyle(
+                          fontFamily: 'inter',
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900),
+                    ),
+                  ))
             ],
           ),
         ),
