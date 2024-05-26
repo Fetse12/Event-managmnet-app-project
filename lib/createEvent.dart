@@ -1,12 +1,19 @@
 import 'dart:io';
 
+import 'package:application_project/auth.dart';
 import 'package:application_project/constant/custome_input.dart';
 import 'package:application_project/containers/custome_input_form.dart';
+import 'package:application_project/database.dart';
+import 'package:application_project/saved_data.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'dart:typed_data';
+
+// Assuming you have imported necessary packages...
 
 class creatEvent_page extends StatefulWidget {
   const creatEvent_page({super.key});
@@ -15,7 +22,9 @@ class creatEvent_page extends StatefulWidget {
   State<creatEvent_page> createState() => _creatEvent_pageState();
 }
 
-class _creatEvent_pageState extends State<creatEvent_page> {
+class _creatEvent_pageState extends State<creatEvent_page>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
   FilePickerResult? _filePickerResult;
 
   final TextEditingController _nameController = TextEditingController();
@@ -24,6 +33,15 @@ class _creatEvent_pageState extends State<creatEvent_page> {
   final TextEditingController _dateTimeController = TextEditingController();
   final TextEditingController _guestController = TextEditingController();
   final TextEditingController _sponsersController = TextEditingController();
+
+  Storage storage = Storage(client);
+  bool isUploading = false;
+  String useraId = "";
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+    useraId = SavedData.getUserId();
+  }
   //date and time picker
 
   Future<void> _selectDateTime(BuildContext context) async {
@@ -52,24 +70,46 @@ class _creatEvent_pageState extends State<creatEvent_page> {
   }
 
   void _openFilePicker() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
     setState(() {
       _filePickerResult = result;
     });
   }
 
 // upload event image to storage bucket
-Future uploadEventImage()async{
-  try{
-    if (_filePickerResult!=null){
-      PlatformFile file=_filePickerResult.files.first;
-      final fileByes=await File(file.path!).readAsBytes();
-      final InputFile=InputFile.fromBytes(bytes: fileBytes, filename: file.name);
-      final
+  Future uploadEventImage() async {
+    setState(() {
+      isUploading = true;
+    });
+
+    try {
+      if (_filePickerResult != null) {
+        final PlatformFile file = _filePickerResult!.files.first;
+
+        final inputFile = InputFile.fromBytes(
+          bytes: file.bytes!,
+          filename: file.name,
+        );
+
+        final response = await storage.createFile(
+          bucketId: '664b7e8e00271c7d3e98',
+          fileId: ID.unique(),
+          file: inputFile,
+        );
+
+        print(response.$id);
+        return response.$id;
+      } else {
+        print("No file selected.");
+      }
+    } catch (e) {
+      print("Error uploading image: $e");
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +140,11 @@ Future uploadEventImage()async{
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image(
-                            image: FileImage(
-                                File(_filePickerResult!.files.first.path!)),
+                            image: MemoryImage(
+                              Uint8List.fromList(
+                                _filePickerResult!.files.first.bytes!,
+                              ),
+                            ),
                             fit: BoxFit.fill,
                           ),
                         )
@@ -186,7 +229,9 @@ Future uploadEventImage()async{
                   width: double.infinity,
                   child: MaterialButton(
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      uploadEventImage();
+                    },
                     child: Text(
                       "Create New Event",
                       style: TextStyle(
