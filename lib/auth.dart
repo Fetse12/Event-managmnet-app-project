@@ -27,12 +27,12 @@ Future LoginUser(String email, String password) async {
     final user = await account.createEmailPasswordSession(
         email: email, password: password);
     SavedData.savedUserId(user.userId);
+    getUserData();
     return true;
   } on AppwriteException catch (e) {
     return false;
   }
 }
-
 //logout user
 
 Future LogoutUser() async {

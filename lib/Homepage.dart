@@ -1,6 +1,7 @@
 import 'package:application_project/auth.dart';
 import 'package:application_project/constant/colors.dart';
 import 'package:application_project/createEvent.dart';
+import 'package:application_project/createEventdetail.dart';
 import 'package:application_project/database.dart';
 import 'package:application_project/login.dart';
 import 'package:application_project/saved_data.dart';
@@ -64,12 +65,18 @@ class _Home_pageState extends State<Home_page> {
           SliverList(
               delegate: SliverChildBuilderDelegate(
                   (context, index) => ListTile(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EventDetails(
+                                      data: events[index],
+                                    ))),
                         leading: Text(
                           "${index + 1}",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         title: Text(
-                          events[index].data["name"],
+                          events[index].data["Name"],
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         subtitle: Text(

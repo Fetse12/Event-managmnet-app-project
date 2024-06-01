@@ -97,9 +97,10 @@ class _login_pageState extends State<login_page> {
                           LoginUser(_emailController.text,
                                   _passwordController.text)
                               .then((value) {
-                            if (value) {
+                            if (value == true) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Login succesfully")));
+                                  SnackBar(
+                                      content: Text("Login succesfully!!!")));
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

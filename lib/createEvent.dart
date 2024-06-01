@@ -7,16 +7,15 @@ import 'package:application_project/database.dart';
 import 'package:application_project/saved_data.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'dart:typed_data';
 
-// Assuming you have imported necessary packages...
-
 class creatEvent_page extends StatefulWidget {
-  const creatEvent_page({super.key});
+  const creatEvent_page({Key? key});
 
   @override
   State<creatEvent_page> createState() => _creatEvent_pageState();
@@ -37,31 +36,36 @@ class _creatEvent_pageState extends State<creatEvent_page>
   Storage storage = Storage(client);
   bool isUploading = false;
   String useraId = "";
+
+  @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
     useraId = SavedData.getUserId();
   }
-  //date and time picker
 
   Future<void> _selectDateTime(BuildContext context) async {
     final DateTime? pickedDateTime = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2100));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
 
     if (pickedDateTime != null) {
-      final TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: TimeOfDay.now());
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
 
       if (pickedTime != null) {
         final DateTime selectedDateTime = DateTime(
-            pickedDateTime.year,
-            pickedDateTime.month,
-            pickedDateTime.day,
-            pickedTime.hour,
-            pickedTime.minute);
+          pickedDateTime.year,
+          pickedDateTime.month,
+          pickedDateTime.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
         setState(() {
           _dateTimeController.text = selectedDateTime.toString();
         });
@@ -76,7 +80,6 @@ class _creatEvent_pageState extends State<creatEvent_page>
     });
   }
 
-// upload event image to storage bucket
   Future uploadEventImage() async {
     setState(() {
       isUploading = true;
@@ -101,13 +104,11 @@ class _creatEvent_pageState extends State<creatEvent_page>
         return response.$id;
       } else {
         print("No file selected.");
+        return null;
       }
     } catch (e) {
       print("Error uploading image: $e");
-    } finally {
-      setState(() {
-        isUploading = false;
-      });
+      return null;
     }
   }
 
@@ -134,8 +135,9 @@ class _creatEvent_pageState extends State<creatEvent_page>
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * .3,
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: _filePickerResult != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
@@ -162,9 +164,10 @@ class _creatEvent_pageState extends State<creatEvent_page>
                             Text(
                               "Add Event",
                               style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
-                            )
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                 ),
@@ -173,35 +176,39 @@ class _creatEvent_pageState extends State<creatEvent_page>
                 height: 8,
               ),
               CustomInputForm(
-                  controller: _nameController,
-                  icon: Icons.event_outlined,
-                  label: "Event Name",
-                  hint: "Add Event Name"),
+                controller: _nameController,
+                icon: Icons.event_outlined,
+                label: "Event Name",
+                hint: "Add Event Name",
+              ),
               SizedBox(
                 height: 8,
               ),
               CustomInputForm(
-                  maxLines: 4,
-                  controller: _descController,
-                  icon: Icons.description_outlined,
-                  label: "Description",
-                  hint: "Add Description"),
+                maxLines: 4,
+                controller: _descController,
+                icon: Icons.description_outlined,
+                label: "Description",
+                hint: "Add Description",
+              ),
               SizedBox(
                 height: 8,
               ),
               CustomInputForm(
-                  controller: _locationController,
-                  icon: Icons.location_on_outlined,
-                  label: "Location",
-                  hint: "Enter the location of Event"),
+                controller: _locationController,
+                icon: Icons.location_on_outlined,
+                label: "Location",
+                hint: "Enter the location of Event",
+              ),
               SizedBox(
                 height: 8,
               ),
               CustomInputForm(
-                  controller: _guestController,
-                  icon: Icons.people_outline,
-                  label: "Gustes",
-                  hint: "Enter Gustes"),
+                controller: _guestController,
+                icon: Icons.people_outline,
+                label: "Gustes",
+                hint: "Enter Gustes",
+              ),
               SizedBox(
                 height: 8,
               ),
@@ -217,29 +224,68 @@ class _creatEvent_pageState extends State<creatEvent_page>
                 height: 8,
               ),
               CustomInputForm(
-                  controller: _sponsersController,
-                  icon: Icons.attach_money_outlined,
-                  label: "Sponsers",
-                  hint: "Enter the sponsers of Event"),
+                controller: _sponsersController,
+                icon: Icons.attach_money_outlined,
+                label: "Sponsers",
+                hint: "Enter the sponsers of Event",
+              ),
               SizedBox(
                 height: 40,
               ),
               SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: MaterialButton(
-                    color: Colors.white,
-                    onPressed: () {
-                      uploadEventImage();
-                    },
-                    child: Text(
-                      "Create New Event",
-                      style: TextStyle(
-                          fontFamily: 'inter',
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900),
+                height: 50,
+                width: double.infinity,
+                child: MaterialButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    if (_nameController.text == "" ||
+                        _descController.text == "" ||
+                        _locationController.text == "" ||
+                        _dateTimeController.text == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Event name,Description,location ,Date and time are must",
+                          ),
+                        ),
+                      );
+                    } else {
+                      uploadEventImage().then((value) {
+                        if (value != null) {
+                          createEnvent(
+                            _nameController.text,
+                            _descController.text,
+                            value,
+                            _locationController.text,
+                            _dateTimeController.text,
+                            useraId,
+                            _guestController.text,
+                            _sponsersController.text,
+                          ).then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Event Created !!")),
+                            );
+                            Navigator.pop(context);
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text("Failed to upload event image")),
+                          );
+                        }
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Create New Event",
+                    style: TextStyle(
+                      fontFamily: 'inter',
+                      color: Colors.black,
+                      fontWeight: FontWeight.w900,
                     ),
-                  ))
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -13,9 +13,9 @@ Future<void> saveusersData(String name, String email, String userId) async {
           collectionId: "6647b8a2001c3b918593",
           documentId: ID.unique(),
           data: {
-            "name": name,
-            "email": email,
-            "userId": userId,
+            "Name": name,
+            "Email": email,
+            "UserId": userId,
           })
       .then((value) => print("document created"))
       .catchError((e) => print(e));
@@ -28,7 +28,9 @@ Future getUserData() async {
     final data = await databases.listDocuments(
         databaseId: databaseId,
         collectionId: "6647b8a2001c3b918593",
-        queries: [Query.equal("usesrId", id)]);
+        queries: [Query.equal("UserId", id)]);
+    SavedData.savedUserName(data.documents[0].data['name']);
+    SavedData.savedUserEmail(data.documents[0].data['email']);
     print(data);
   } catch (e) {
     print(e);
@@ -40,7 +42,7 @@ Future<void> createEnvent(
     String name,
     String desc,
     String image,
-    String Location,
+    String location,
     String dateTime,
     String created,
     String gustes,
@@ -48,13 +50,13 @@ Future<void> createEnvent(
   return await databases
       .createDocument(
           databaseId: databaseId,
-          collectionId: "6647b8a2001c3b918593",
+          collectionId: "6649e6610032eff3910f",
           documentId: ID.unique(),
           data: {
             "Name": name,
             "Description": desc,
             "Image": image,
-            "Location": Location,
+            "Location": location,
             "DateTime": dateTime,
             "CreatedBy": created,
             "Gustes": gustes,
@@ -68,7 +70,7 @@ Future<void> createEnvent(
 Future getAllEvents() async {
   try {
     final data = await databases.listDocuments(
-        databaseId: databaseId, collectionId: "6647b8a2001c3b918593");
+        databaseId: databaseId, collectionId: "6649e6610032eff3910f");
     return data.documents;
   } catch (e) {
     print(e);

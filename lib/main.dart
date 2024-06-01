@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:application_project/Homepage.dart';
 import 'package:application_project/Signup.dart';
 import 'package:application_project/checksession.dart';
@@ -10,6 +12,7 @@ import 'package:application_project/index.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SavedData.init();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -26,6 +29,15 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Home_page());
+        home: index_page());
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
