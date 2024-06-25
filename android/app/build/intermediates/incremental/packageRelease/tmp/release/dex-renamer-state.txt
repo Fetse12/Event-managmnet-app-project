@@ -1,0 +1,4 @@
+#Fri Jun 21 15:06:13 EAT 2024
+base.0=/home/fitsum/Desktop/application_project/android/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

@@ -26,15 +26,7 @@ class _Signup_pageState extends State<Signup_page> {
             child: Container(
               height: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFA1BABE),
-                    Color(0xFF010B0D),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 0.30],
-                ),
+                color: Color.fromARGB(255, 1, 0, 29),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -107,14 +99,14 @@ class _Signup_pageState extends State<Signup_page> {
                             });
                           },
                           child: Text(
-                            "SIGN UP",
+                            "Sign Up",
                             style: TextStyle(
                                 fontFamily: 'inter',
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.w900),
                           ),
                           style: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.black,
+                              backgroundColor: Colors.white,
                               side: BorderSide(
                                 color: Colors.white,
                                 width: 2.0,

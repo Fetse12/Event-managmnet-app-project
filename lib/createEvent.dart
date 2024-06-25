@@ -11,7 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:path/path.dart';
 import 'dart:typed_data';
 
 class creatEvent_page extends StatefulWidget {
@@ -75,47 +75,48 @@ class _creatEvent_pageState extends State<creatEvent_page>
 
   void _openFilePicker() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-    setState(() {
-      _filePickerResult = result;
-    });
+    if (result != null) {
+      setState(() {
+        _filePickerResult = result;
+      });
+    } else {
+      print("File picking canceled or failed.");
+    }
   }
 
   Future uploadEventImage() async {
     setState(() {
       isUploading = true;
     });
-
     try {
-      if (_filePickerResult != null) {
-        final PlatformFile file = _filePickerResult!.files.first;
-
+      if (_filePickerResult != null && _filePickerResult!.files.isNotEmpty) {
+        PlatformFile file = _filePickerResult!.files.first;
         final inputFile = InputFile.fromBytes(
           bytes: file.bytes!,
           filename: file.name,
         );
-
         final response = await storage.createFile(
-          bucketId: '664b7e8e00271c7d3e98',
-          fileId: ID.unique(),
-          file: inputFile,
-        );
-
+            bucketId: '664b7e8e00271c7d3e98',
+            fileId: ID.unique(),
+            file: inputFile);
         print(response.$id);
         return response.$id;
       } else {
-        print("No file selected.");
-        return null;
+        print("Something went wrong");
       }
     } catch (e) {
-      print("Error uploading image: $e");
-      return null;
+      print(e);
+    } finally {
+      setState(() {
+        isUploading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 1, 0, 29),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -138,15 +139,12 @@ class _creatEvent_pageState extends State<creatEvent_page>
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: _filePickerResult != null
+                  child: _filePickerResult != null &&
+                          _filePickerResult!.files.isNotEmpty
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image(
-                            image: MemoryImage(
-                              Uint8List.fromList(
-                                _filePickerResult!.files.first.bytes!,
-                              ),
-                            ),
+                          child: Image.memory(
+                            _filePickerResult!.files.first.bytes!,
                             fit: BoxFit.fill,
                           ),
                         )
@@ -158,11 +156,9 @@ class _creatEvent_pageState extends State<creatEvent_page>
                               size: 42,
                               color: Colors.black,
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
+                            SizedBox(height: 8),
                             Text(
-                              "Add Event",
+                              "Add Event Image",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,

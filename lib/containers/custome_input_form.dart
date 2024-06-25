@@ -24,36 +24,48 @@ class CustomInputForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      readOnly: readOnly ?? false,
-      onTap: onTap,
-      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-      maxLines: maxLines ?? 1,
-      obscureText: obscureText ?? false,
-      keyboardType: keyboardType ?? TextInputType.text,
-      cursorColor: Colors.black,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color.fromARGB(255, 255, 255, 255),
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.circular(8),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        color: Colors.white.withOpacity(0.2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TextFormField(
+          controller: controller,
+          readOnly: readOnly ?? false,
+          onTap: onTap,
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
+          maxLines: maxLines ?? 1,
+          obscureText: obscureText ?? false,
+          keyboardType: keyboardType ?? TextInputType.text,
+          cursorColor: Colors.white,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            labelText: label,
+            labelStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+            ),
+            hintText: hint,
+            hintStyle: const TextStyle(
+              color: Colors.white,
+            ),
+            prefixIcon: Icon(
+              icon,
+              color: Colors.white,
+            ),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
         ),
-        labelText: label,
-        labelStyle: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w600,
-        ),
-        hintText: hint,
-        hintStyle: const TextStyle(
-          color: Colors.black,
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: Colors.black,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
       ),
     );
   }

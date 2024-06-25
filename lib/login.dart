@@ -24,15 +24,7 @@ class _login_pageState extends State<login_page> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFA1BABE),
-                    Color(0xFF010B0D),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 0.30],
-                ),
+                color: Color.fromARGB(255, 1, 0, 29),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

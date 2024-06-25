@@ -1,8 +1,8 @@
-import 'package:appwrite/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SavedData {
   static SharedPreferences? preferences;
+
   static Future<void> init() async {
     preferences = await SharedPreferences.getInstance();
   }
